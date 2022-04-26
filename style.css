@@ -1,0 +1,68 @@
+
+:root {
+  --QGreen: #48645B;
+  --QBlack: #393939;
+  --QLime: rgb(33, 199, 33);
+}
+
+body {
+    background-color: #393939;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+      'left mid right';
+    gap: 10px;
+    width: 100%;
+    
+  }
+  div .left {
+    width: max-content;
+    font-size: 30px;
+    grid-area: left;
+  }
+  div .left {
+    width: max-content;
+    font-size: 30px;
+    grid-area: mid;
+  }
+  div .left {
+    width: max-content;
+    font-size: 30px;
+    grid-area: right;
+  }
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #333;
+}
+ul li {
+    width: 100%;
+    list-style: none;
+}
+ul li a {
+    display: block;
+    text-align: left;
+    display: block;
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+    box-shadow:0 ;
+}
+
+ul li a:hover {
+    border-left-style: outset;
+    border-width: 5px;
+    background-color: var(--QGreen);
+    color: white
+}
+
+ul .login-button {
+    background-color: var(--QGreen);
+}
