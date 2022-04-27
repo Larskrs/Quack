@@ -1,3 +1,4 @@
+
 # Quack
 
 ## How to add the users table?
@@ -25,4 +26,4 @@ CREATE TABLE users (
      postsTitle varchar(128), 
      postsOwnerId int(11) 
  );
-    ```
+ ```
