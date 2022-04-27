@@ -1,5 +1,13 @@
 <?php
 
+
+function emptyInputSetProfilePicture($file) {
+    if (empty($file)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 function emptyInputSignup($name, $email, $username, $password, $passwordrepeat) {
     $result = false;
     if (empty($name) || empty($email) || empty($username) || empty($password) || empty($passwordrepeat)) {
