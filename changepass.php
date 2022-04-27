@@ -7,11 +7,12 @@ include 'page-includes/header.php';
 
 <div class="mid">
 <section class="singup-form">
-        <h2>Sign Up</h2>
-        <form action="includes/login.inc.php" method="post">
+        <h2>Change Password</h2>
+        <form action="includes/changepass.inc.php" method="post">
             <li><input type="text" name="uid" placeholder="Username/Email..."></li>
-            <li><input type="password" name="pws" placeholder="Password..."></li>
-            <li><button type="submit" name="submit" style="margin:auto" >Log In</button>
+            <li><input type="password" name="pwd" placeholder="Password..."></li>
+            <li><input type="password" name="newpwd" placeholder="New Password..."></li>
+            <li><button type="submit" name="submit" >Log In</button>
 
         </form>
         
@@ -32,7 +33,7 @@ include 'page-includes/header.php';
         }
         else if (isset($_GET['login'])) {
             if ($_GET['signup'] == "success") {
-                echo '<p class="success">Log in successful!</p>';
+                echo '<p class="success">Sign up successful!</p>';
             }
         }
         ?>
@@ -40,8 +41,21 @@ include 'page-includes/header.php';
     </section>
         not logged in? register <a href="signup.php">here</a>
     </section>
+</div>
+<div class="right">
+    <ul>
+        <li>Monkey</li>
+        <li>Monkey</li>
+        <li>Monkey</li>
+    </ul>
+    Monkey
+    Norway
+    Lorum
+</div>
+
 
 </div>
+
 <!-- Page Content -->
 
 <?php

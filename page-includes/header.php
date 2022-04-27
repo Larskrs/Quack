@@ -1,3 +1,8 @@
+<?php 
+    session_start(); // this will start a session.  We will use this to store the user's id.
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +19,19 @@
 </head>
 <body>
 
-<div class="grid-item">
+<nav class="grid-item">
     <ul>
         <li><a href="index.php"><i class="fa fa-home"></i> Home</a></li>
         <li><a href="about.php">About</a></li>
         <li><a href="contact.php">Contact</a></li>
         <!-- If user is not logged in, blah blah. -->
-        <li class="login-button"> <a href="login.php">Sign Up</a></li>
+        <?php
+        if (isset($_SESSION['userUid'])) {
+            echo '<li><a href="account.php">Account</a></li>';
+        }
+        else {
+            echo '<li><a href="login.php">Login</a></li>';
+        }
+        ?>
     </ul>
-</div>
+    </nav>

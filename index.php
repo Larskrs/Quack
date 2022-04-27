@@ -6,17 +6,14 @@ include 'page-includes/header.php';
 ?>
 
 <div class="mid">
+
+<?php
+        if (isset($_SESSION['userUid'])) {
+            echo"<p>You are logged in!</p>";
+        }
+?>
+
     Monkey is selling lemonade for $1.00
-</div>
-<div class="right">
-    <ul>
-        <li>Monkey</li>
-        <li>Monkey</li>
-        <li>Monkey</li>
-    </ul>
-</div>
-
-
 </div>
 
 <!-- Page Content -->
