@@ -3,6 +3,7 @@
     
     <?php
 include 'page-includes/header.php';
+require_once 'includes/dbh.inc.php';
 ?>
 
 <div class="mid">
@@ -10,31 +11,43 @@ include 'page-includes/header.php';
 <?php
         if (!isset($_SESSION['userUid'])) {
             header("location: index.php");
-        } else {
-            echo"<p>You are logged in!</p>";
+            exit();
         }
 ?>
-        <ul>
-
-            <?php
-                echo '<h2>'.$_SESSION['userUid'].'</h2>';
-            ?>
-            <div class="grid-container">
-                <div class="grid-item" style="grid-area: left; margin-left: auto">
-
-                    <?php 
-                $profileImgFullName = "uploads/profileImages/".$_SESSION['userUid'].".png";
-                if (!file_exists($profileImgFullName)) {
-                    $profileImgFullName = "";
-                }
-                echo('<img style="border-radius: 50%" id="output" src="'.$profileImgFullName.'" width="200" height="200">');
+                
+                <?php
+                require 'page-includes/profile-header.php';
+                displayProfile($conn, $_SESSION['userUid']);
                 ?>
-                </div>
+        
+<ul>
+        
+        
+        <div class="grid-container">
                 <div class="grid-item" style="grid-area: mid;">
 
-                    <form action="includes/setprofilepicture.inc.php" method="post" enctype="multipart/form-data">
-                        <li><input name="file" type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])"></li>
+                    <div class="grid-item profileImg">
+
+                        <h2>Profile Image</h2>
+                        <form action="includes/setprofilepicture.inc.php" method="post" enctype="multipart/form-data">
+                            <li><input name="file" type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])"></li>
+                            <li><button style="margin:auto;height:40px" name="submit" type="submit">Upload</button></li>
+                        </form>
+
+                    </div>
+
+                    <div class="grid-item profileBanner"> 
+                    <h2>Profile Banner</h2>
+                    <form action="includes/setprofilebanner.inc.php" method="post" enctype="multipart/form-data">
+                        <li><input name="file" type="file" accept="image/*" onchange="document.getElementById('profile-section').style = 'background-size: cover;background-image: url(' + window.URL.createObjectURL(this.files[0]) + ')'"></li>
                         <li><button style="margin:auto;height:40px" name="submit" type="submit">Upload</button></li>
+                    </form>
+
+                    </div>
+                </div>
+                    <form action="includes/setprofilebio.inc.php" method="post" enctype="multipart/form-data">
+                    <li><textarea name="content" id="content" class="textInputArea" cols="15" rows="2" maxlength=48 placeholder="Content..."></textarea></li>
+                    <li><button style="margin:auto;" type="submit" name="submit" required>Send</button><li>
                     </form>
                     
                     <?php
@@ -55,8 +68,9 @@ include 'page-includes/header.php';
                             }
                         }
                         ?>
+                    
            
-            </div>
+            
         </div>
         
             <form action="includes/logout.inc.php" method="post">

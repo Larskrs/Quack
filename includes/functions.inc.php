@@ -1,9 +1,56 @@
 <?php
 
+function getIdFromUsername($conn, $username) {
+        $sql = "SELECT * FROM users WHERE usersUid = ?";
+        $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../index.php?error=stmtfailed");
+        exit();
+    }
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        $post = mysqli_fetch_assoc($result);
+
+        $username = $post['usersId'];
+
+        return $username;
+} 
+function getBio($conn, $userUid) {
+    $sql = "SELECT usersBio FROM users WHERE usersUid = ?;";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../account.php?error=stmtfailed");
+        exit();
+    }
+        mysqli_stmt_bind_param($stmt, "s", $userUid);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $row = mysqli_fetch_assoc($result);
+        $userBio = $row['usersBio'];
+        return $userBio;
+}
+function updateBio($conn, $content) {
+
+    session_start();
+
+    $sql = "UPDATE users SET usersBio = ? WHERE usersUid = ?;";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../account.php?error=stmtfailed");
+        exit();
+    }
+        mysqli_stmt_bind_param($stmt, "ss", $content, $_SESSION['userUid']);
+        
+        mysqli_stmt_execute($stmt);
+        echo $_SESSION['userUid'];
+        echo $content;
+        header("location: ../account.php?success=bioupdated");
+        exit();
+}
 function getUserFromPost($conn, $row) {
-
-
-
         $sql = "SELECT * FROM users WHERE usersId = " . $row['postsOwnerId'];
         $result = mysqli_query($conn, $sql);
 
@@ -145,7 +192,7 @@ function loginUser($conn, $username, $password) {
         $checkPwd = password_verify($password, $pwdHashed); // we check if the password is correct.
 
         if ($checkPwd === false) { // is the password = to the stored password in the database?
-            header("location: ../login?error=wrongpwd");
+            header("location: ../login.php?error=wrongpwd");
             exit();
         } else if ($checkPwd === true) {
 

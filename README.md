@@ -11,7 +11,8 @@ CREATE TABLE users (
     usersName varchar(128) NOT NULL,
     usersEmail varchar(128) NOT NULL,
     usersPwd varchar(128) NOT NULL,
-    usersUid varchar(128) NOT NULL
+    usersUid varchar(128) NOT NULL,
+    usersBio TEXT,
     );
 ```
 ## How to add the posts table?
