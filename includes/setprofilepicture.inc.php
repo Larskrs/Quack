@@ -29,15 +29,23 @@ if (isset($_POST["submit"])) { // this checks if the user entered this page by c
                 $fileNameNew = $_SESSION['userUid'] . ".png";
                 $fileDestination = '../uploads/profileImages/' . $fileNameNew;
                 move_uploaded_file($fileTmpName, $fileDestination);
-                echo "\nFile uploaded successfully";
+                
+                header("location: ../account.php?upload=success");
+                exit();
             } else {
                 echo "Your file is too big";
+                header("location: ../account.php?error=toobigprofilepicture");
+                exit();
             }
         } else {
             echo "There was an error uploading your file";
+                header("location: ../account.php?error=unknown");
+                exit();
         }
     } else {
-        echo "You cannot upload files of this type";
+                echo "You cannot upload files of this type";
+                header("location: ../account.php?error=wrongtype");
+                exit();
     }
 
 

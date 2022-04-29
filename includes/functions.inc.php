@@ -1,6 +1,25 @@
 <?php
 
+function getUserFromPost($conn, $row) {
 
+
+
+        $sql = "SELECT * FROM users WHERE usersId = " . $row['postsOwnerId'];
+        $result = mysqli_query($conn, $sql);
+
+        $post = mysqli_fetch_assoc($result);
+
+        $username = $post['usersUid'];
+
+        return $username;
+}
+function postEmptyFields($content, $title) {
+    if (empty($content) || empty($title)) {
+        return true;
+    } else {
+        return false;            
+    }
+}
 function emptyInputSetProfilePicture($file) {
     if (empty($file)) {
         return true;
@@ -86,6 +105,19 @@ function userExists($conn, $username, $email) {
 
     mysqli_stmt_close($stmt); // closes the sql statement.
 }
+function post($conn, $userId, $content, $title) {
+    $sql = "INSERT INTO posts (postsOwnerId, postsContent, postsTitle) VALUES (?, ?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../index.php?error=sqlerror");
+        exit();
+    } else {
+        mysqli_stmt_bind_param($stmt, "iss", $userId, $content, $title);
+        mysqli_stmt_execute($stmt);
+        header("location: ../index.php?post=success"); // if the sql statement is successful, we send the user to the signup page.
+        exit();
+    }
+}
 function createUser($conn, $name, $email, $username, $password) {
     $sql = "INSERT INTO users (usersName, usersEmail, usersUid, usersPwd) VALUES (?, ?, ?, ?)"; // this is the sql statement that will be used to create the user.
     $stmt = mysqli_stmt_init($conn);
@@ -104,7 +136,7 @@ function loginUser($conn, $username, $password) {
     $uidExists = userExists($conn, $username, $username); // if username is an email, it will return true aswell.
 
     if ($uidExists === false) {
-        header("location: ../login?error=nouser");
+        header("location: ../login.php?error=nouser");
         exit();
     } else {
 
