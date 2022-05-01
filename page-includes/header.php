@@ -21,15 +21,17 @@
 
 <nav class="grid-item">
     <ul>
-        <li><a href="index.php"><i class="fa fa-home"></i> Home</a></li>
-        <li><a href="about.php">About</a></li>
-        <li><a href="contact.php">Contact</a></li>
-        <!-- If user is not logged in, blah blah. -->
-        <?php
+    <?php
         if (isset($_SESSION['userUid'])) {
-            echo '<li><a href="account.php">Account</a></li>';
+            echo '<li><a href="account.php"><img style="border-radius: 50%"; width="30" height="30" src="uploads/profileImages/'.$_SESSION['userUid'].'.png"></a></li>';
         }
-        else {
+        ?>
+
+        <li><a href="index.php"><i class="fa fa-home"></i> Home</a></li>
+        <!-- If user is not logged in, blah blah. -->
+
+        <?php
+        if (!isset($_SESSION['userUid'])) {
             echo '<li><a href="login.php">Login</a></li>';
         }
         ?>

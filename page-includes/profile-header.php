@@ -30,7 +30,7 @@ function displayProfile($conn, $userUid) {
         
         
         echo('<div id="profile-section" class="profile-section" style="padding: 20px; background-size: cover; background-image: url('.$profileBannerFullName.');">');
-        echo('<img style="border-radius: 30%; margin:auto; " id="output" src="'.$profileImgFullName.'" width="200" height="200">');
+        echo('<img style="border-radius: 50%; margin:auto; " id="output" src="'.$profileImgFullName.'" width="200" height="200">');
         echo('<div>');
         echo '<h2 font-size: 50;" >'.$userUid.'</h2>';
         echo '<textarea class="biographyTextArea" disabled font-size: 15; border-style: none;" >'.$userBio.'</textarea>';

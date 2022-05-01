@@ -18,6 +18,95 @@ function getIdFromUsername($conn, $username) {
 
         return $username;
 } 
+function updateBanner($file) {
+    $fileName = $file['name'];
+    $fileTmpName = $file['tmp_name'];
+    $fileSize = $file['size'];
+    $fileError = $file['error'];
+    $fileType = $file['type'];
+
+    
+    require_once 'dbh.inc.php';
+    require_once 'functions.inc.php';
+
+    // error handling.
+
+    echo $fileName;
+
+    $fileExt = explode('.', $fileName);
+    $fileActualExt = strtolower(end($fileExt));
+
+    $allowed = array('jpg', 'jpeg', 'png');
+
+    if (in_array($fileActualExt, $allowed)) {
+        if ($fileError === 0) {
+            if ($fileSize < 4000000) {
+                session_start();
+                $fileNameNew = $_SESSION['userUid'] . ".png";
+                $fileDestination = '../uploads/profileBanners/' . $fileNameNew;
+                move_uploaded_file($fileTmpName, $fileDestination);
+                
+
+            } else {
+                echo "Your file is too big";
+                header("location: ../account.php?error=toobigprofilebanner");
+                exit();
+            }
+        } else {
+            echo "There was an error uploading your file";
+                header("location: ../account.php?error=unknown");
+                exit();
+        }
+    } else {
+                echo "You cannot upload files of this type";
+                header("location: ../account.php?error=wrongtype");
+                exit();
+    }
+}
+function updateProfilePicture($file) {
+    $fileName = $file['name'];
+    $fileTmpName = $file['tmp_name'];
+    $fileSize = $file['size'];
+    $fileError = $file['error'];
+    $fileType = $file['type'];
+
+    
+    require_once 'dbh.inc.php';
+    require_once 'functions.inc.php';
+
+    // error handling.
+
+    echo $fileName;
+
+    $fileExt = explode('.', $fileName);
+    $fileActualExt = strtolower(end($fileExt));
+
+    $allowed = array('jpg', 'jpeg', 'png');
+
+    if (in_array($fileActualExt, $allowed)) {
+        if ($fileError === 0) {
+            if ($fileSize < 4000000) {
+                session_start();
+                $fileNameNew = $_SESSION['userUid'] . ".png";
+                $fileDestination = '../uploads/profileImages/' . $fileNameNew;
+                move_uploaded_file($fileTmpName, $fileDestination);
+                
+            } else {
+                echo "Your file is too big";
+                header("location: ../account.php?error=toobigprofilebanner");
+                exit();
+            }
+        } else {
+            echo "There was an error uploading your file";
+                header("location: ../account.php?error=unknown");
+                exit();
+        }
+    } else {
+                echo "You cannot upload files of this type";
+                header("location: ../account.php?error=wrongtype");
+                exit();
+    }
+}
 function getBio($conn, $userUid) {
     $sql = "SELECT usersBio FROM users WHERE usersUid = ?;";
     $stmt = mysqli_stmt_init($conn);
@@ -47,8 +136,6 @@ function updateBio($conn, $content) {
         mysqli_stmt_execute($stmt);
         echo $_SESSION['userUid'];
         echo $content;
-        header("location: ../account.php?success=bioupdated");
-        exit();
 }
 function getUserFromPost($conn, $row) {
         $sql = "SELECT * FROM users WHERE usersId = " . $row['postsOwnerId'];

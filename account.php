@@ -26,29 +26,28 @@ require_once 'includes/dbh.inc.php';
         <div class="grid-container">
                 <div class="grid-item" style="grid-area: mid;">
 
-                    <div class="grid-item profileImg">
 
-                        <h2>Profile Image</h2>
-                        <form action="includes/setprofilepicture.inc.php" method="post" enctype="multipart/form-data">
-                            <li><input name="file" type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])"></li>
-                            <li><button style="margin:auto;height:40px" name="submit" type="submit">Upload</button></li>
-                        </form>
+                <form action="includes/saveProfileSettings.php" method="post">
 
-                    </div>
+                    <li class="grid-container">
+                            <h5>Profile Image</h5>
+                            <input name="fileToUpload" type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                        </li>
+                        <hr class="solid">
+                        <li class="grid-container">
+                        <h5>Profile Banner</h5>
+                            <input name="banner" type="file" accept="image/*" onchange="document.getElementById('profile-section').style = 'background-size: cover;background-image: url(' + window.URL.createObjectURL(this.files[0]) + ')'">
+                        </li>
+                        <hr class="solid">
+                        <li class="grid-container">
+                            <h5 class="underline">Bio</h5>
+                            <textarea name="bio" id="bio" class="textInputArea" cols="15" rows="1" maxlength=48 placeholder="Content..."></textarea>
+                        </li>
+                        <hr class="solid">
 
-                    <div class="grid-item profileBanner"> 
-                    <h2>Profile Banner</h2>
-                    <form action="includes/setprofilebanner.inc.php" method="post" enctype="multipart/form-data">
-                        <li><input name="file" type="file" accept="image/*" onchange="document.getElementById('profile-section').style = 'background-size: cover;background-image: url(' + window.URL.createObjectURL(this.files[0]) + ')'"></li>
-                        <li><button style="margin:auto;height:40px" name="submit" type="submit">Upload</button></li>
-                    </form>
-
-                    </div>
-                </div>
-                    <form action="includes/setprofilebio.inc.php" method="post" enctype="multipart/form-data">
-                    <li><textarea name="content" id="content" class="textInputArea" cols="15" rows="2" maxlength=48 placeholder="Content..."></textarea></li>
-                    <li><button style="margin:auto;" type="submit" name="submit" required>Send</button><li>
-                    </form>
+                        <li><button style="height:40px" name="submit" type="submit">Upload</button></li>
+                    
+                </form>
                     
                     <?php
                         if (isset($_GET['error'])) {
@@ -70,8 +69,8 @@ require_once 'includes/dbh.inc.php';
                         ?>
                     
            
-            
-        </div>
+                </div>
+                </div>
         
             <form action="includes/logout.inc.php" method="post">
                 <li><Button name="submit" type="submit" >Logout</Button></li>
@@ -79,9 +78,10 @@ require_once 'includes/dbh.inc.php';
             <form action="includes/logout.inc.php" method="post">
                 <li><Button name="submit" type="submit" style="border-color: crimson; border-style:solid;border-width:2px;color:aliceblue;background-color:red">Delete Account</Button></li>
             </form>
-        </ul>
-
+            
         </div>
+        
+    </ul>
 
 <!-- Page Content -->
 
