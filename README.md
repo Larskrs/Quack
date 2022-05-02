@@ -28,3 +28,14 @@ CREATE TABLE users (
      postsOwnerId int(11) 
  );
  ```
+## How to add the likes table?
+
+#### SQL CODE:
+
+ ```
+ CREATE TABLE likes (
+	likesId int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+    postId int(11) NOT NULL,
+    usersId int(11) NOT NULL
+);
+ ```

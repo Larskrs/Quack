@@ -18,52 +18,26 @@ function getIdFromUsername($conn, $username) {
 
         return $username;
 } 
-function updateBanner($file) {
-    $fileName = $file['name'];
-    $fileTmpName = $file['tmp_name'];
-    $fileSize = $file['size'];
-    $fileError = $file['error'];
-    $fileType = $file['type'];
-
-    
-    require_once 'dbh.inc.php';
-    require_once 'functions.inc.php';
-
-    // error handling.
-
-    echo $fileName;
-
-    $fileExt = explode('.', $fileName);
-    $fileActualExt = strtolower(end($fileExt));
-
-    $allowed = array('jpg', 'jpeg', 'png');
-
-    if (in_array($fileActualExt, $allowed)) {
-        if ($fileError === 0) {
-            if ($fileSize < 4000000) {
-                session_start();
-                $fileNameNew = $_SESSION['userUid'] . ".png";
-                $fileDestination = '../uploads/profileBanners/' . $fileNameNew;
-                move_uploaded_file($fileTmpName, $fileDestination);
-                
-
-            } else {
-                echo "Your file is too big";
-                header("location: ../account.php?error=toobigprofilebanner");
-                exit();
-            }
-        } else {
-            echo "There was an error uploading your file";
-                header("location: ../account.php?error=unknown");
-                exit();
-        }
-    } else {
-                echo "You cannot upload files of this type";
-                header("location: ../account.php?error=wrongtype");
-                exit();
-    }
+function getUsernameFromId($conn, $id) {
+    $sql = "SELECT * FROM users WHERE usersId = ?";
+    $stmt = mysqli_stmt_init($conn);
+if (!mysqli_stmt_prepare($stmt, $sql)) {
+    header("location: ../index.php?error=stmtfailed");
+    exit();
 }
-function updateProfilePicture($file) {
+    mysqli_stmt_bind_param($stmt, "s", $id);
+    
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    $post = mysqli_fetch_assoc($result);
+
+    $identity = $post['usersUid'];
+
+    return $identity;
+} 
+
+function uploadImageFile($targetDirectory, $name, $file) {
     $fileName = $file['name'];
     $fileTmpName = $file['tmp_name'];
     $fileSize = $file['size'];
@@ -77,18 +51,25 @@ function updateProfilePicture($file) {
     // error handling.
 
     echo $fileName;
-
+    header("location: ../account.php". $fileName) ;
+    
     $fileExt = explode('.', $fileName);
     $fileActualExt = strtolower(end($fileExt));
 
     $allowed = array('jpg', 'jpeg', 'png');
 
     if (in_array($fileActualExt, $allowed)) {
+        echo 'file is image';
         if ($fileError === 0) {
+            echo 'file has no error';
             if ($fileSize < 4000000) {
-                session_start();
-                $fileNameNew = $_SESSION['userUid'] . ".png";
-                $fileDestination = '../uploads/profileImages/' . $fileNameNew;
+                echo 'file is not too big   ';
+                $fileNameNew = $name . ".png";
+                echo $fileNameNew;
+                $fileDestination = '../'.$targetDirectory .'/'. $fileNameNew;
+                if (file_exists($fileDestination)) {
+                    unlink($fileDestination);
+                }
                 move_uploaded_file($fileTmpName, $fileDestination);
                 
             } else {

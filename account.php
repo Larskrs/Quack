@@ -27,16 +27,18 @@ require_once 'includes/dbh.inc.php';
                 <div class="grid-item" style="grid-area: mid;">
 
 
-                <form action="includes/saveProfileSettings.php" method="post">
+
+
+                <form action="includes/saveProfileSettings.php" method="post" enctype="multipart/form-data">
 
                     <li class="grid-container">
                             <h5>Profile Image</h5>
-                            <input name="fileToUpload" type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+                            <input name='profile' type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
                         </li>
                         <hr class="solid">
                         <li class="grid-container">
                         <h5>Profile Banner</h5>
-                            <input name="banner" type="file" accept="image/*" onchange="document.getElementById('profile-section').style = 'background-size: cover;background-image: url(' + window.URL.createObjectURL(this.files[0]) + ')'">
+                            <input name='banner' type="file" accept="image/*" onchange="document.getElementById('profile-section').style = 'background-size: cover;background-image: url(' + window.URL.createObjectURL(this.files[0]) + ')'">
                         </li>
                         <hr class="solid">
                         <li class="grid-container">
@@ -45,7 +47,7 @@ require_once 'includes/dbh.inc.php';
                         </li>
                         <hr class="solid">
 
-                        <li><button style="height:40px" name="submit" type="submit">Upload</button></li>
+                        <li><button style="height:40px" name="submit" type="submit">Save Changes</button></li>
                     
                 </form>
                     

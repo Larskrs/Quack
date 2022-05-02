@@ -1,18 +1,24 @@
 <?php 
 
+    require_once 'includes/functions.inc.php';
+
     function display_profile_posts($conn, $postsOwnerId) {
+
+        $userUid = 
         
     //$query = 'SELECT * FROM `posts` ORDER BY `postsId` DESC LIMIT 10';
-    $sql = "SELECT * FROM posts WHERE postsOwnerId = ? ORDER BY postsId DESC LIMIT 10";
+    $sql = "SELECT * FROM posts WHERE postsOwnerId = ? OR postsTitle LIKE ? ORDER BY postsId DESC LIMIT 10";
     $stmt = mysqli_stmt_init($conn);
     if (!mysqli_stmt_prepare($stmt, $sql)) {
         header("location: ../index.php?error=stmtfailed");
         exit();
     }
-        mysqli_stmt_bind_param($stmt, "i", $postsOwnerId);
+        $tagged = '%@'.getUsernameFromId($conn, $postsOwnerId).'%';
+        mysqli_stmt_bind_param($stmt, "is", $postsOwnerId, $tagged);
         
         mysqli_stmt_execute($stmt);
         $result = mysqli_stmt_get_result($stmt);
+
 
 while($row = mysqli_fetch_assoc($result)) {
   
