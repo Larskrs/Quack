@@ -1,16 +1,11 @@
-<div class="grid-container">
-    
-    
-    <?php
-include 'page-includes/header.php';
+<?php
+include 'header.php';
 ?>
-
-<div class="mid">
 <section class="singup-form">
         <h2>Sign Up</h2>
         <form action="includes/login.inc.php" method="post">
-            <li><input type="text" name="uid" placeholder="Username/Email..."></li>
-            <li><input type="password" name="pws" placeholder="Password..."></li>
+            <li><input onchange="selectInput('pswField')" id="uidField" type="text" name="uid" placeholder="Username/Email..."></li>
+            <li><input type="password" name="pws" id="pwsField" placeholder="Password..."></li>
             <li><button type="submit" name="submit" style="margin:auto" >Log In</button>
 
         </form>
@@ -40,10 +35,3 @@ include 'page-includes/header.php';
     </section>
         not logged in? register <a href="signup.php">here</a>
     </section>
-
-</div>
-<!-- Page Content -->
-
-<?php
-include 'page-includes/footer.php';
-?>

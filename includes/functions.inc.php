@@ -50,7 +50,6 @@ function uploadImageFile($targetDirectory, $name, $file) {
 
     // error handling.
 
-    echo $fileName;
     header("location: ../account.php". $fileName) ;
     
     $fileExt = explode('.', $fileName);
@@ -88,6 +87,84 @@ function uploadImageFile($targetDirectory, $name, $file) {
                 exit();
     }
 }
+function resize_image($file, $w, $h, $crop=FALSE) {
+    list($width, $height) = getimagesize($file);
+    $r = $width / $height;
+    if ($crop) {
+        if ($width > $height) {
+            $width = ceil($width-($width*abs($r-$w/$h)));
+        } else {
+            $height = ceil($height-($height*abs($r-$w/$h)));
+        }
+        $newwidth = $w;
+        $newheight = $h;
+    } else {
+        if ($w/$h > $r) {
+            $newwidth = $h*$r;
+            $newheight = $h;
+        } else {
+            $newheight = $w/$r;
+            $newwidth = $w;
+        }
+    }
+    $src = imagecreatefromjpeg($file);
+    $dst = imagecreatetruecolor($newwidth, $newheight);
+    imagecopyresampled($dst, $src, 0, 0, 0, 0, $newwidth, $newheight, $width, $height);
+
+    return $dst;
+}
+function fileTypeIs($file, $search) {
+    $fileExt = explode('.', $file);
+    $fileActualExt = strtolower(end($fileExt));
+
+    return in_array($fileActualExt, $search);
+}
+function uploadPostFile($targetDirectory, $file) {
+
+    $fileName = $file['name'];
+    $fileTmpName = $file['tmp_name'];
+    $fileSize = $file['size'];
+    $fileError = $file['error'];
+    $fileType = $file['type'];
+
+    require_once 'dbh.inc.php';
+    require_once 'functions.inc.php';
+
+    // error handling.
+    
+    $fileExt = explode('.', $fileName);
+    $fileActualExt = strtolower(end($fileExt));
+
+    $allowed = array('jpg', 'jpeg', 'png','mp4','gif','mov');
+
+    if (in_array($fileActualExt, $allowed)) {
+        echo 'file is image';
+        if ($fileError === 0) {
+            echo 'file has no error';
+            if ($fileSize < 40000000) {
+                echo 'file is not too big   ';
+                $fileNameNew = uniqid('', true) .'.'. $fileActualExt;
+                $fileDestination = '../'.$targetDirectory .'/'. $fileNameNew;
+                if (file_exists($fileDestination)) {
+                    unlink($fileDestination);
+                }
+                $upload = move_uploaded_file($fileTmpName, $fileDestination);
+                
+                
+                return $targetDirectory .'/'. $fileNameNew;
+            } else {
+                echo "Your file is too big";
+                exit();
+            }
+        } else {
+            echo "There was an error uploading your file";
+                exit();
+        }
+    } else {
+                echo "You cannot upload files of this type";
+                exit();
+    }
+}
 function getBio($conn, $userUid) {
     $sql = "SELECT usersBio FROM users WHERE usersUid = ?;";
     $stmt = mysqli_stmt_init($conn);
@@ -101,6 +178,16 @@ function getBio($conn, $userUid) {
         $row = mysqli_fetch_assoc($result);
         $userBio = $row['usersBio'];
         return $userBio;
+}
+function getFileFromPost($conn, $postId) {
+        $sql = "SELECT * FROM posts WHERE postsId = " . $postId;
+        $result = mysqli_query($conn, $sql);
+
+        $post = mysqli_fetch_assoc($result);
+
+        $fileDestination = $post['postsFile'];
+
+        return $fileDestination;
 }
 function updateBio($conn, $content) {
 
@@ -220,6 +307,9 @@ function userExists($conn, $username, $email) {
 
     mysqli_stmt_close($stmt); // closes the sql statement.
 }
+function alert($msg) {
+    echo "<script type='text/javascript'>alert('$msg');</script>";
+}
 function post($conn, $userId, $content, $title) {
     $sql = "INSERT INTO posts (postsOwnerId, postsContent, postsTitle) VALUES (?, ?, ?)";
     $stmt = mysqli_stmt_init($conn);
@@ -230,6 +320,84 @@ function post($conn, $userId, $content, $title) {
         mysqli_stmt_bind_param($stmt, "iss", $userId, $content, $title);
         mysqli_stmt_execute($stmt);
         header("location: ../index.php?post=success"); // if the sql statement is successful, we send the user to the signup page.
+        exit();
+    }
+}
+function postWithFile($conn, $userId, $content, $title, $file) {
+    $sql = "INSERT INTO posts (postsOwnerId, postsContent, postsTitle, postsFile) VALUES (?, ?, ?, ?)";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../index.php?error=sqlerror");
+        exit();
+    } else {
+        mysqli_stmt_bind_param($stmt, "isss", $userId, $content, $title, $file);
+        mysqli_stmt_execute($stmt);
+        header("location: ../index.php?post=success"); // if the sql statement is successful, we send the user to the signup page.
+        exit();
+    }
+}
+function getPostsLikeAmount($conn, $postsId) {
+    $sql = "SELECT COUNT(*) FROM likes WHERE postId = ?";
+
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../account.php?error=stmtfailed");
+        exit();
+    }
+        mysqli_stmt_bind_param($stmt, "i", $postsId);
+        mysqli_stmt_execute($stmt);
+        $resultData = mysqli_stmt_get_result($stmt);
+        $data=mysqli_fetch_assoc($resultData);
+        $result = $data['COUNT(*)'];
+        return $result;
+    mysqli_stmt_close($stmt); // closes the sql statement.
+}
+function unlikePost($conn, $userId, $postsId) {
+    $sql = "DELETE FROM likes WHERE usersId = ? AND postId = ?";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../index.php?error=sqlerror");
+        exit();
+    } else {
+        mysqli_stmt_bind_param($stmt, "ii", $userId, $postsId);
+        mysqli_stmt_execute($stmt);
+        header("location: ../#post".$postsId."?like=success");
+        exit();
+    }
+}
+function hasLiked($conn, $userId, $postId) {
+    $result = false;
+
+    $sql = "SELECT * FROM likes WHERE usersId = ? AND postId = ?";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../index.php?error=sqlerror");
+        exit();
+    }
+        mysqli_stmt_bind_param($stmt, 'ii', $userId, $postId);
+        mysqli_stmt_execute($stmt);
+
+        $resultData = mysqli_stmt_get_result($stmt); // gets the result of the sql statement.
+
+    if ($row = mysqli_fetch_assoc($resultData)) { 
+        return $row; //returns all the data of the user we found, can be used to automaticly login if everything is as it should be.
+    } else {
+        $result = false;
+        return $result;
+    }
+
+    mysqli_stmt_close($stmt); // closes the sql statement.
+}
+function likePost($conn, $userId, $postId) {
+    $sql = "INSERT INTO likes (postId, usersId) VALUES (?,?)";
+    $stmt = mysqli_stmt_init($conn);
+    if (!mysqli_stmt_prepare($stmt, $sql)) {
+        header("location: ../index.php?error=sqlerror");
+        exit();
+    } else {
+        mysqli_stmt_bind_param($stmt, "ii", $postId, $userId);
+        mysqli_stmt_execute($stmt);
+        header("location: ../#post".$postId."?like=success");
         exit();
     }
 }
@@ -273,6 +441,7 @@ function loginUser($conn, $username, $password) {
             session_start();
             $_SESSION['userId'] = $uidExists['usersId']; // if the password is correct, we store the users id in a session.
             $_SESSION['userUid'] = $uidExists['usersUid']; // we store the users uid in a session.
+            $_SESSION['userName'] = $uidExists['usersName'];
             header("location: ../index.php?login=success");
             exit();
         } else {

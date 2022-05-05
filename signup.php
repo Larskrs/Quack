@@ -1,12 +1,7 @@
-<div class="grid-container">
-    
-    
-    <?php
-include 'page-includes/header.php';
+<?php
+include 'header.php';
 ?>
-
-<div class="mid">
-    <section class="singup-form">
+<section class="singup-form">
         <h2>Sign Up</h2>
         <form action="includes/signup.inc.php" method="post">
             <li><input type="email" name="email" placeholder="Email..."></li>
@@ -43,10 +38,3 @@ include 'page-includes/header.php';
         }
         ?>
         </section>
-</div>
-
-<!-- Page Content -->
-
-<?php
-include 'page-includes/footer.php';
-?>

@@ -1,42 +1,32 @@
-<div class="grid-container">
-    
-    
-    <?php
-include 'page-includes/header.php';
-    require 'includes/functions.inc.php';
-    require 'includes/dbh.inc.php';
+<?php 
+    include_once 'header.php';
+    include_once 'includes/dbh.inc.php';
+    include 'profile-header.php';
+    displayProfile($conn, $_SESSION['userUid']);
 ?>
 
 
-<div class="mid">
+<form action="includes/saveProfileSettings.php" method="post" enctype="multipart/form-data">
 
-<?php
+<li class="grid-container">
+        <h5>Profile Image</h5>
+        <input name='profile' type="file" accept="image/*" onchange="document.getElementById('output').src = window.URL.createObjectURL(this.files[0])">
+    </li>
+    <hr class="solid">
+    <li class="grid-container">
+    <h5>Profile Banner</h5>
+        <input name='banner' type="file" accept="image/*" onchange="document.getElementById('profile-section').style = 'background-size: cover;background-image: url(' + window.URL.createObjectURL(this.files[0]) + ')'">
+    </li>
+    <hr class="solid">
+    <li class="grid-container">
+        <h5 class="underline">Bio</h5>
+        <textarea name="bio" id="bio" class="textInputArea" cols="15" rows="1" maxlength=48 placeholder="Content..."></textarea>
+    </li>
+    <hr class="solid">
 
-if (isset($_GET['error'])) {
-    if ($_GET['error'] == "unknown") {
-        echo '<p class="error">uknown error occured!</p>';
-    }
-}
-    else if (isset($_GET['username'])) {
+    <li><button style="height:40px" name="submit" type="submit">Save Changes</button></li>
 
-            if (invalidUid($_GET['username'])) {
-                echo '<p class="error">Invalid username!</p>';
-            }
-            else {
-                $username = $_GET['username'];
-                
-                require 'page-includes\profile-header.php';
-                displayProfile($conn, $username);
-                require 'page-includes\post-page.php';
-                display_profile_posts($conn, getIdFromUsername($conn, $username));
-            }
-    }
-?>
-
-</div>
-
-<!-- Page Content -->
-
-<?php
-include 'page-includes/footer.php';
-?>
+</form>
+<form action="includes/logout.inc.php" method="post">
+                <li><Button name="submit" type="submit" >Logout</Button></li>
+            </form>

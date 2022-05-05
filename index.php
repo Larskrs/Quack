@@ -1,30 +1,17 @@
-<div class="grid-container">
-    
-    
+<?php
+    include_once 'header.php';
+    include_once 'includes/dbh.inc.php';
+?>
+
+
     <?php
-include 'page-includes/header.php';
-?>
+        if (isset($_SESSION['userName'])) {
+            require 'includes/post.php';
+        } else {
 
-<div class="mid">
-
-<?php
-
-require 'includes/functions.inc.php';
-require 'includes/dbh.inc.php';
-
-        if (isset($_SESSION['userUid'])) {
-            echo"<p>You are logged in!</p>";
-            require 'post.php';
         }
-
-        require 'page-includes\post-page.php';
+        include 'addons/post.php';
         display_all($conn);
-?>
+    ?>
 
-</div>
-
-<!-- Page Content -->
-
-<?php
-include 'page-includes/footer.php';
-?>
+    
