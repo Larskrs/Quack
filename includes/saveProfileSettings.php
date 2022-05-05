@@ -18,6 +18,7 @@ if (isset($_POST["submit"])) { // this checks if the user entered this page by c
         uploadImageFile('uploads/profileBanners', $_SESSION['userUid'], $banner);
     }
     if (!empty($ppicture)) {
+        alert(var_dump($ppicture));
         uploadImageFile('uploads/profileImages', $_SESSION['userUid'], $ppicture);
     }
 

@@ -57,9 +57,12 @@ function uploadImageFile($targetDirectory, $name, $file) {
 
     $allowed = array('jpg', 'jpeg', 'png');
 
+    
+
     if (in_array($fileActualExt, $allowed)) {
         echo 'file is image';
         if ($fileError === 0) {
+            
             echo 'file has no error';
             if ($fileSize < 4000000) {
                 echo 'file is not too big   ';
@@ -69,21 +72,22 @@ function uploadImageFile($targetDirectory, $name, $file) {
                 if (file_exists($fileDestination)) {
                     unlink($fileDestination);
                 }
+                alert($fileDestination);
                 move_uploaded_file($fileTmpName, $fileDestination);
                 
             } else {
                 echo "Your file is too big";
-                header("location: ../account.php?error=toobigprofilebanner");
+                header("location: ../profile.php?error=toobigprofilebanner");
                 exit();
             }
         } else {
             echo "There was an error uploading your file";
-                header("location: ../account.php?error=unknown");
+                header("location: ../profile.php?error=unknown");
                 exit();
         }
     } else {
                 echo "You cannot upload files of this type";
-                header("location: ../account.php?error=wrongtype");
+                header("location: ../profile.php?error=wrongtype");
                 exit();
     }
 }

@@ -13,6 +13,7 @@ if (isset($_POST["submit"])) { // this checks if the user entered this page by c
     require_once 'functions.inc.php';
     
     updateBio($conn, $content);
+    alert('biography updated');
 
 
 } else {
