@@ -23,21 +23,8 @@
                 ';
 
                 $fileDestination = getFileFromPost($conn, $postsId);
-
-                $imageTypes = array('png','jpg','jpeg', 'gif');
-                $videoTypes = array('mp4','mov');
-
-                    if (fileTypeIs($fileDestination, $imageTypes)) {
-                        echo '<img src="'.$fileDestination.'" class="post-img">';
-                    } 
-                    if (fileTypeIs($fileDestination, $videoTypes)) {
-                        echo '
-                        <video controls>
-                        <source src="'.$fileDestination.'" type="video/mp4">
-                        Your browser does not support the video tag.
-                        </video> 
-                        ';
-                    }
+                filePreview($fileDestination);
+                
 
                 echo '
                 <div class="post-content">

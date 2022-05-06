@@ -13,4 +13,5 @@ function toggle() {
    element.classList.toggle("disabled");
    button.classList.toggle("disabled");
 }
+
 </script>

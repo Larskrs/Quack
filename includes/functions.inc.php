@@ -311,6 +311,22 @@ function userExists($conn, $username, $email) {
 
     mysqli_stmt_close($stmt); // closes the sql statement.
 }
+function filePreview($fileDestination) {
+    $imageTypes = array('png','jpg','jpeg', 'gif');
+                $videoTypes = array('mp4','mov');
+
+                    if (fileTypeIs($fileDestination, $imageTypes)) {
+                        echo '<img src="'.$fileDestination.'" class="post-img">';
+                    } 
+                    if (fileTypeIs($fileDestination, $videoTypes)) {
+                        echo '
+                        <video controls>
+                        <source src="'.$fileDestination.'" type="video/mp4">
+                        Your browser does not support the video tag.
+                        </video> 
+                        ';
+                    }
+}
 function alert($msg) {
     echo "<script type='text/javascript'>alert('$msg');</script>";
 }
